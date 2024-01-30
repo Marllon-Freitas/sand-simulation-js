@@ -43,8 +43,54 @@ button:hover {
   margin: 0 auto;
   padding: 0 20px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   height: 100vh;
 }
+
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.controllers {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.controllers h4 {
+  font-size: 2rem;
+  color: var(--secondary-color);
+  margin-bottom: 20px;
+
+}
+
+.controller {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.controller label {
+  font-size: 1.5rem;
+  color: var(--secondary-color);
+}
+
+.controller input {
+  padding: 10px 20px;
+  border: 1px solid var(--secondary-color);
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  font-size: 1.2rem;
+  text-align: center;
+}
+
