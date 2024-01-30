@@ -8,9 +8,30 @@
 </head>
 <body>
   <div class="container">
-    <h3>Falling Sand Simulation</h3>
-    <canvas id="canvas" width="800" height="800"></canvas>
-    <button id="clear-sand">Clear Sand!</button>
+    <section class="main">
+      <h3>Falling Sand Simulation</h3>
+      <canvas id="canvas" width="800" height="800"></canvas>
+    </section>
+    <section class="controllers">
+      <h4>Controllers</h4>
+      <div class="controller">
+        <label for="sand">Sand</label>
+        <input type="radio" name="element" id="sand" value="sand" checked>
+      </div>
+      <div class="controller">
+        <label for="dirt">Dirt</label>
+        <input type="radio" name="element" id="dirt" value="dirt">
+      </div>
+      <div class="controller">
+        <label for="static">Static</label>
+        <input type="radio" name="element" id="static" value="stone">
+      </div>
+      <div class="controller">
+        <label for="eraser">Eraser</label>
+        <input type="radio" name="element" id="eraser" value="eraser">
+      </div>
+      <button id="clear-sand">Clear Sand!</button>
+    </section>
   </div>
   <script src="js/main.js"></script>
 </body>
