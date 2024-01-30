@@ -7,34 +7,37 @@ let staticController = document.getElementById("static");
 let clearController = document.getElementById("eraser");
 let dirtController = document.getElementById("dirt");
 let waterController = document.getElementById("water");
+let brushSizeController = document.getElementById("brush-size");
 
-const GRAIN_SIZE = 10;
+const GRAIN_SIZE = 5;
 let grid;
 let cols, rows;
 
-function mouseDrag(e, value) {
-  let x = Math.floor(e.offsetX / GRAIN_SIZE);
-  let y = Math.floor(e.offsetY / GRAIN_SIZE);
-  if (x >= 0 && x < cols && y >= 0 && y < rows) {
-    grid[x][y] = value;
+function mouseDrag(e, value, brushSize = 1) {
+  e.preventDefault();
+  let offsetX, offsetY;
+  if (e.touches) {
+    offsetX = e.touches[0].pageX - e.target.offsetLeft;
+    offsetY = e.touches[0].pageY - e.target.offsetTop;
+  } else {
+    offsetX = e.offsetX;
+    offsetY = e.offsetY;
+  }
+  let mouseColumn = Math.floor(offsetX / GRAIN_SIZE);
+  let mouseRow = Math.floor(offsetY / GRAIN_SIZE);
+
+  let matrix = brushSize;
+  let halfMatrix = Math.floor(matrix / 2);
+  for (let i = -halfMatrix; i <= halfMatrix; i++) {
+    for (let j = -halfMatrix; j <= halfMatrix; j++) {
+      let x = mouseColumn + i;
+      let y = mouseRow + j;
+      if (Math.sqrt(i * i + j * j) <= halfMatrix && x >= 0 && x < cols && y >= 0 && y < rows) {
+        grid[x][y] = value;
+      }
+    }
   }
 }
-
-// function createStaticStructure(e) {
-//   let x = Math.floor(e.offsetX / GRAIN_SIZE);
-//   let y = Math.floor(e.offsetY / GRAIN_SIZE);
-//   if (x >= 0 && x < cols && y >= 0 && y < rows) {
-//     grid[x][y] = 2;
-//   }
-// }
-
-// function removeCell(e) {
-//   let x = Math.floor(e.offsetX / GRAIN_SIZE);
-//   let y = Math.floor(e.offsetY / GRAIN_SIZE);
-//   if (x >= 0 && x < cols && y >= 0 && y < rows) {
-//     grid[x][y] = 0;
-//   }
-// }
 
 function createGrid(cols, rows) {
   let grid = new Array(cols);
@@ -129,39 +132,50 @@ function draw() {
 
 function init() {
   setup();
-  let mouseAction = '';
-  canvas.addEventListener("mousedown", function (e) {
+  let action = '';
+
+  function startAction(e) {
     if (sandController.checked) {
-      mouseAction = 'sand';
+      action = 'sand';
     } else if (staticController.checked) {
-      mouseAction = 'static';
+      action = 'static';
     } else if (clearController.checked) {
-      mouseAction = 'clear';
+      action = 'clear';
     } else if (dirtController.checked) {
-      mouseAction = 'dirt';
+      action = 'dirt';
     } else if (waterController.checked) {
-      mouseAction = 'water';
+      action = 'water';
     }
-  });
+  }
 
-  canvas.addEventListener("mousemove", function (e) {
-    if (mouseAction === 'sand') {
-      mouseDrag(e, 1);
-    } else if (mouseAction === 'static') {
-      mouseDrag(e, 2);
-    } else if (mouseAction === 'clear') {
-      mouseDrag(e, 0);
-    } else if (mouseAction === 'dirt') {
-      mouseDrag(e, 3);
-    } else if (mouseAction === 'water') {
-      mouseDrag(e, 4);
+  function moveAction(e) {
+    let brushSize = brushSizeController.value;
+    if (action === 'sand') {
+      mouseDrag(e, 1, brushSize);
+    } else if (action === 'static') {
+      mouseDrag(e, 2, brushSize);
+    } else if (action === 'clear') {
+      mouseDrag(e, 0, brushSize);
+    } else if (action === 'dirt') {
+      mouseDrag(e, 3, brushSize);
+    } else if (action === 'water') {
+      mouseDrag(e, 4, brushSize);
     }
-  });
+  }
 
-  canvas.addEventListener("mouseup", function (e) {
-    mouseAction = '';
-  });
-  setInterval(draw, 30);
+  function endAction(e) {
+    action = '';
+  }
+
+  canvas.addEventListener("mousedown", startAction);
+  canvas.addEventListener("mousemove", moveAction);
+  canvas.addEventListener("mouseup", endAction);
+
+  canvas.addEventListener("touchstart", startAction);
+  canvas.addEventListener("touchmove", moveAction);
+  canvas.addEventListener("touchend", endAction);
+
+  setInterval(draw, 20);
 }
 
 init();
